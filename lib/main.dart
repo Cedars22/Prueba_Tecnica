@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prueba_tecnica/pages/home_page.dart';
 
-const personajesBox = 'personajes_ex';
 void main() async {
   runApp(const MyApp());
 }

@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'personaje.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class Personaje {
   @JsonKey(name: "id")
   int? id;
