@@ -15,6 +15,11 @@ class _HomePageBodyState extends State<HomePageBody> {
   int currentPage = 1;
   String nextPageUrl = 'https://rickandmortyapi.com/api/character/?page=1';
   List<Personaje> personajes = [];
+  bool reachedLastPage = false;
+
+  String filtroStatus = '';
+  String filtroSpecies = '';
+  String filtroName = '';
 
   @override
   void initState() {
@@ -32,67 +37,187 @@ class _HomePageBodyState extends State<HomePageBody> {
   void scrollListener() {
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
-      loadCharacters();
+      if (!reachedLastPage) {
+        loadCharacters();
+      }
     }
   }
 
-  bool isLoading = false;
   Future<void> loadCharacters() async {
-    if (isLoading) return; // Evitar cargar personajes duplicados
-    setState(() {
-      isLoading = true;
-    });
     try {
-      final List<Personaje> newPersonajes =
-          await Repository().fetchCharacters(nextPageUrl, currentPage);
+      final List<Personaje> newPersonajes = await Repository().fetchCharacters(
+          nextPageUrl, currentPage, filtroStatus, filtroName, filtroSpecies);
+
       setState(() {
         personajes.addAll(newPersonajes);
         currentPage++;
         nextPageUrl =
-            'https://rickandmortyapi.com/api/character/?page=$currentPage';
-        isLoading = false;
+            '/api/character/?page=$currentPage&status=$filtroStatus&name=$filtroName&species=$filtroSpecies';
+        if (newPersonajes.isEmpty) {
+          reachedLastPage = true;
+        }
       });
     } catch (e) {
       print('Error: $e');
-      setState(() {
-        isLoading = false;
-      });
     }
+  }
+
+  void applyFilterStatus(String status, String name, String species) {
+    setState(() {
+      filtroName = name;
+      filtroSpecies = species;
+      filtroStatus = status;
+      reachedLastPage = false;
+      personajes.clear();
+      currentPage = 1;
+      nextPageUrl =
+          '/api/character/?page=$currentPage&status=$filtroStatus&name=$filtroName&species=$filtroSpecies';
+    });
+    loadCharacters();
   }
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          PopupMenuButton<String>(
+            child: const Center(
+                child: Text(
+              'Names',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500),
+            )),
+            onSelected: (value) {
+              applyFilterStatus('', value, '');
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'rick',
+                child: Text('Rick'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'morty',
+                child: Text('Morty'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'summer',
+                child: Text('Summer'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'beth',
+                child: Text('Beth'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'jerry',
+                child: Text('Jerry'),
+              ),
+              const PopupMenuItem<String>(
+                value: '',
+                child: Text('Quitar filttro'),
+              ),
+            ],
+          ),
+          PopupMenuButton<String>(
+            child: const Center(
+                child: Text(
+              'Species',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500),
+            )),
+            onSelected: (value) {
+              applyFilterStatus('', '', value);
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'human',
+                child: Text('Humans'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'alien',
+                child: Text('Aliens'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'cronenberg',
+                child: Text('Cronenbergs'),
+              ),
+              const PopupMenuItem<String>(
+                value: '',
+                child: Text('Quitar filttro'),
+              ),
+            ],
+          ),
+          PopupMenuButton<String>(
+            child: const Center(
+                child: Text(
+              'Status',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500),
+            )),
+            onSelected: (value) {
+              applyFilterStatus(value, '', '');
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'alive',
+                child: Text('Alive'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'dead',
+                child: Text('Dead'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'unknown',
+                child: Text('Unknown'),
+              ),
+              const PopupMenuItem<String>(
+                value: '',
+                child: Text('Quitar filttro'),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text(
-              'Rick and Morty',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Rick and Morty',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const Text(
-              'Characters',
-              style: TextStyle(
-                color: Colors.grey,
+              const Text(
+                'All Characters',
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 18,
-            ),
-            SizedBox(
-              height: screenSize.height * 0.75,
-              child: PersonajesList(
+              const SizedBox(
+                height: 18,
+              ),
+              SizedBox(
+                height: screenSize.height * 0.70,
+                child: PersonajesList(
                   scrollController: scrollController,
                   personajes: personajes,
-                  context: context),
-            ),
-          ]),
+                  context: context,
+                  reachedLastPage: reachedLastPage,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

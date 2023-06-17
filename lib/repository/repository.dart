@@ -28,11 +28,13 @@ class Repository {
     }
   }
 
-  Future<List<Personaje>> fetchCharacters(String url, int currentPage) async {
+  Future<List<Personaje>> fetchCharacters(String url, int currentPage,
+      String filtroStatus, String filtroName, String filtroSpecies) async {
     Dio dio = Dio();
     dio.options.baseUrl = "https://rickandmortyapi.com/";
     try {
-      var response = await dio.get("api/character?page=$currentPage");
+      var response = await dio.get(
+          '/api/character/?page=$currentPage&status=$filtroStatus&name=$filtroName&species=$filtroSpecies');
       if (response.statusCode == 200) {
         Result result = Result.fromJson(response.data);
         if (result.personajes != null) {

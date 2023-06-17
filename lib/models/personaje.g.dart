@@ -9,15 +9,15 @@ part of 'personaje.dart';
 Personaje _$PersonajeFromJson(Map<String, dynamic> json) => Personaje(
       id: json['id'] as int?,
       name: json['name'] as String?,
-      type: json['species'] as String?,
+      species: json['species'] as String?,
       image: json['image'] as String?,
-      gender: json['gender'] as String?,
+      status: json['status'] as String?,
     );
 
 Map<String, dynamic> _$PersonajeToJson(Personaje instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'species': instance.type,
+      'species': instance.species,
       'image': instance.image,
-      'gender': instance.gender,
+      'status': instance.status,
     };

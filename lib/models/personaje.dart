@@ -9,12 +9,12 @@ class Personaje {
   @JsonKey(name: "name")
   String? name;
   @JsonKey(name: "species")
-  String? type;
+  String? species;
   @JsonKey(name: "image")
   String? image;
-  @JsonKey(name: "gender")
-  String? gender;
-  Personaje({this.id, this.name, this.type, this.image, this.gender});
+  @JsonKey(name: "status")
+  String? status;
+  Personaje({this.id, this.name, this.species, this.image, this.status});
 
   factory Personaje.fromJson(Map<String, dynamic> json) =>
       _$PersonajeFromJson(json);
