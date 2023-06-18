@@ -1,0 +1,17 @@
+import 'package:flutter/material.dart';
+
+class NotFoundPage extends StatelessWidget {
+  const NotFoundPage({Key? key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Text(
+          'Página no encontrada',
+          style: TextStyle(fontSize: 24),
+        ),
+      ),
+    );
+  }
+}

@@ -12,6 +12,9 @@ Personaje _$PersonajeFromJson(Map<String, dynamic> json) => Personaje(
       species: json['species'] as String?,
       image: json['image'] as String?,
       status: json['status'] as String?,
+      type: json['type'] as String?,
+      gender: json['gender'] as String?,
+      created: json['created'] as String?,
     );
 
 Map<String, dynamic> _$PersonajeToJson(Personaje instance) => <String, dynamic>{
@@ -20,4 +23,7 @@ Map<String, dynamic> _$PersonajeToJson(Personaje instance) => <String, dynamic>{
       'species': instance.species,
       'image': instance.image,
       'status': instance.status,
+      'type': instance.type,
+      'gender': instance.gender,
+      'created': instance.created,
     };

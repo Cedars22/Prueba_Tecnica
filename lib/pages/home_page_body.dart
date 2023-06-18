@@ -83,14 +83,17 @@ class _HomePageBodyState extends State<HomePageBody> {
       appBar: AppBar(
         actions: [
           PopupMenuButton<String>(
-            child: const Center(
-                child: Text(
-              'Names',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500),
-            )),
+            child: Container(
+              padding: const EdgeInsets.only(right: 10),
+              child: const Center(
+                  child: Text(
+                'Names',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500),
+              )),
+            ),
             onSelected: (value) {
               applyFilterStatus('', value, '');
             },
@@ -122,14 +125,17 @@ class _HomePageBodyState extends State<HomePageBody> {
             ],
           ),
           PopupMenuButton<String>(
-            child: const Center(
-                child: Text(
-              'Species',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500),
-            )),
+            child: Container(
+              padding: const EdgeInsets.only(right: 10),
+              child: const Center(
+                  child: Text(
+                'Species',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500),
+              )),
+            ),
             onSelected: (value) {
               applyFilterStatus('', '', value);
             },
@@ -153,14 +159,17 @@ class _HomePageBodyState extends State<HomePageBody> {
             ],
           ),
           PopupMenuButton<String>(
-            child: const Center(
-                child: Text(
-              'Status',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500),
-            )),
+            child: Container(
+              padding: const EdgeInsets.only(right: 10),
+              child: const Center(
+                  child: Text(
+                'Status',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500),
+              )),
+            ),
             onSelected: (value) {
               applyFilterStatus(value, '', '');
             },
@@ -208,7 +217,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                 height: 18,
               ),
               SizedBox(
-                height: screenSize.height * 0.70,
+                height: screenSize.height * 0.76,
                 child: PersonajesList(
                   scrollController: scrollController,
                   personajes: personajes,
