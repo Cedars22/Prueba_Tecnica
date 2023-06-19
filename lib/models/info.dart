@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'info.g.dart';
 
 @JsonSerializable(explicitToJson: true)
+
 class Info {
   @JsonKey(name: "count")
   int? count;
