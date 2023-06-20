@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prueba_tecnica/pages/home_page.dart';
-import 'package:prueba_tecnica/pages/personaje_detalle.dart';
+import 'package:prueba_tecnica/core/router/app_router.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -15,10 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Rick and Morty characters',
       initialRoute: '/',
-      routes: {
-        '/': (BuildContext context) => const HomePage(),
-        'detalle': (BuildContext context) => const PersonajeDetalle(),
-      },
+      routes: AppRouter.routes,
     );
   }
 }

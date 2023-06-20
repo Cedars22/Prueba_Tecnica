@@ -1,16 +1,24 @@
-# prueba_tecnica
+Nuevas tareas:
 
-A new Flutter project.
+- Pasar la app a ingles y español (usa intl)
+- Implementa Isar para offline (este es el complicado)
+- Puedes usar Hive si quieres.
+- O sembast (este no me gusta a mi)
+- Crea un custom widget que se llame customImageNetwork y encapsula el paquete de cahed_network_image
+- Sustituir tu imagen con este custom widget.
+- Utiliza fvm
 
-## Getting Started
+en esta rama, primero instala fvm
 
-This project is a starting point for a Flutter application.
+`dart pub global activate fvm`
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+y luego vas un
+`fvm install`
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Y después todos los comandos de flutter van con fvm flutter
+Ejemplo:
+`flutter pub get` -> `fvm flutter pub get`
+`flutter pub run build_runner build` -> `fvm flutter pub run build_runner build`
+
+

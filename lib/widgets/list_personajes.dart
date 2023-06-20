@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prueba_tecnica/core/router/app_router.dart';
 import 'package:prueba_tecnica/models/personaje.dart';
 import 'package:prueba_tecnica/pages/loading_page.dart';
 
@@ -28,7 +29,7 @@ class PersonajesList extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 final selectedPersonaje = personajes[index];
-                Navigator.pushNamed(context, 'detalle',
+                Navigator.pushNamed(context, AppRouter.detailPage,
                     arguments: selectedPersonaje);
               },
               child: Column(
