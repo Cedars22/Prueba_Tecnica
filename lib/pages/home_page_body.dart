@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prueba_tecnica/models/personaje.dart';
+import 'package:prueba_tecnica/models/result.dart';
 import 'package:prueba_tecnica/repository/repository.dart';
 import 'package:prueba_tecnica/widgets/list_personajes.dart';
 
@@ -16,6 +17,7 @@ class _HomePageBodyState extends State<HomePageBody> {
   String nextPageUrl = 'https://rickandmortyapi.com/api/character/?page=1';
   List<Personaje> personajes = [];
   bool reachedLastPage = false;
+  int count = 0;
 
   String filtroStatus = '';
   String filtroSpecies = '';
@@ -45,17 +47,17 @@ class _HomePageBodyState extends State<HomePageBody> {
 
   Future<void> loadCharacters() async {
     try {
-      final List<Personaje> newPersonajes = await Repository().fetchCharacters(
-          nextPageUrl, currentPage, filtroStatus, filtroName, filtroSpecies);
-
+      final Result result = await Repository().fetchCharacters(
+              nextPageUrl, currentPage, filtroStatus, filtroName, filtroSpecies)
+          as Result;
+      final List<Personaje> newPersonajes = result.personajes ?? [];
+      count = result.info!.count!;
       setState(() {
         personajes.addAll(newPersonajes);
         currentPage++;
         nextPageUrl =
             '/api/character/?page=$currentPage&status=$filtroStatus&name=$filtroName&species=$filtroSpecies';
-        if (newPersonajes.isEmpty) {
-          reachedLastPage = true;
-        }
+        reachedLastPage = personajes.length >= count;
       });
     } catch (e) {
       print('Error: $e');
@@ -223,6 +225,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                   personajes: personajes,
                   context: context,
                   reachedLastPage: reachedLastPage,
+                  count: count,
                 ),
               ),
             ],

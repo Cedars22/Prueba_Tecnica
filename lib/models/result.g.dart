@@ -11,8 +11,12 @@ Result _$ResultFromJson(Map<String, dynamic> json) => Result(
               ?.map((e) => Personaje.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      info: json['info'] == null
+          ? null
+          : Info.fromJson(json['info'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ResultToJson(Result instance) => <String, dynamic>{
+      'info': instance.info?.toJson(),
       'results': instance.personajes?.map((e) => e.toJson()).toList(),
     };

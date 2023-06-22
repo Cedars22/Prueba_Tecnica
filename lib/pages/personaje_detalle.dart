@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prueba_tecnica/models/personaje.dart';
+import 'package:prueba_tecnica/widgets/cached_net_image.dart';
 
 class PersonajeDetalle extends StatelessWidget {
   const PersonajeDetalle({super.key});
@@ -35,9 +36,9 @@ class PersonajeDetalle extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image(
-          image: NetworkImage(personaje.image!),
+        child: SizedBox(
           height: 200,
+          child: CachedNetworkImageWidget(imageUrl: personaje.image!),
         ),
       ),
     );

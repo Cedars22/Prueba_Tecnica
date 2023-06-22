@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prueba_tecnica/core/router/app_router.dart';
 import 'package:prueba_tecnica/models/personaje.dart';
 import 'package:prueba_tecnica/pages/loading_page.dart';
+import 'package:prueba_tecnica/widgets/cached_net_image.dart';
 
 class PersonajesList extends StatelessWidget {
   const PersonajesList({
@@ -10,12 +11,14 @@ class PersonajesList extends StatelessWidget {
     required this.personajes,
     required this.context,
     required this.reachedLastPage,
+    required this.count,
   });
 
   final ScrollController scrollController;
   final List<Personaje> personajes;
   final BuildContext context;
   final bool reachedLastPage;
+  final int count;
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +39,10 @@ class PersonajesList extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(45),
-                    child: FadeInImage(
-                      image: NetworkImage(personajes[index].image!),
-                      placeholder: const AssetImage('assets/no-image.png'),
-                      fit: BoxFit.cover,
+                    child: SizedBox(
                       height: screenSize.height * 0.32,
+                      child: CachedNetworkImageWidget(
+                          imageUrl: personajes[index].image!),
                     ),
                   ),
                   Text(
@@ -77,7 +79,7 @@ class PersonajesList extends StatelessWidget {
               padding: EdgeInsets.all(16.0),
               child: Center(
                 child: Text(
-                  'No hay más personajes disponibles',
+                  'No more characters available',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
