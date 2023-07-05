@@ -24,72 +24,71 @@ class PersonajesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      body: ListView.builder(
-        controller: scrollController,
-        itemCount: personajes.length + 1,
-        itemBuilder: (context, index) {
-          if (index < personajes.length) {
-            return GestureDetector(
-              onTap: () {
-                final selectedPersonaje = personajes[index];
-                Navigator.pushNamed(context, AppRouter.detailPage,
-                    arguments: selectedPersonaje);
-              },
-              child: Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(45),
-                    child: SizedBox(
-                      height: screenSize.height * 0.32,
-                      child: CachedNetworkImageWidget(
-                          imageUrl: personajes[index].image!),
-                    ),
+        body: ListView.builder(
+      controller: scrollController,
+      itemCount: personajes.length + 1,
+      itemBuilder: (context, index) {
+        if (index < personajes.length) {
+          return GestureDetector(
+            onTap: () {
+              final selectedPersonaje = personajes[index];
+              Navigator.pushNamed(context, AppRouter.detailPage,
+                  arguments: selectedPersonaje);
+            },
+            child: Column(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(45),
+                  child: SizedBox(
+                    height: screenSize.height * 0.32,
+                    child: CachedNetworkImageWidget(
+                        imageUrl: personajes[index].image!),
                   ),
-                  Text(
-                    personajes[index].name!,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    personajes[index].species!,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Text(
-                    personajes[index].status!,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  )
-                ],
-              ),
-            );
-          } else if (index == personajes.length && !reachedLastPage) {
-            return const LoadingPage();
-          } else {
-            return const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Center(
-                child: Text(
-                  'No more characters available',
-                  style: TextStyle(
-                    fontSize: 18,
+                ),
+                Text(
+                  personajes[index].name!,
+                  style: const TextStyle(
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                Text(
+                  personajes[index].species!,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(
+                  personajes[index].status!,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                )
+              ],
+            ),
+          );
+        } else if (index == personajes.length && !reachedLastPage) {
+          return const LoadingPage();
+        } else {
+          return const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Center(
+              child: Text(
+                'No more characters available',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            );
-          }
-        },
-      ),
-    );
+            ),
+          );
+        }
+      },
+    ));
   }
 }

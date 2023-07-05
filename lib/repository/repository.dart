@@ -4,13 +4,11 @@ import 'package:prueba_tecnica/models/result.dart';
 const String baseUrl = "https://rickandmortyapi.com/";
 
 class Repository {
-  Future<Result?> fetchCharacters(String url, int currentPage,
-      String filtroStatus, String filtroName, String filtroSpecies) async {
+  Future<Result?> fetchCharacters(String url, int currentPage) async {
     Dio dio = Dio();
     dio.options.baseUrl = baseUrl;
     try {
-      var response = await dio.get(
-          '/api/character/?page=$currentPage&status=$filtroStatus&name=$filtroName&species=$filtroSpecies');
+      var response = await dio.get('/api/character/?page=$currentPage');
       if (response.statusCode == 200) {
         Result result = Result.fromJson(response.data);
         return result;

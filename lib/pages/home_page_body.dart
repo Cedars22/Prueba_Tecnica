@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prueba_tecnica/database/isar_service.dart';
 import 'package:prueba_tecnica/models/personaje.dart';
 import 'package:prueba_tecnica/models/result.dart';
 import 'package:prueba_tecnica/repository/repository.dart';
@@ -18,14 +19,19 @@ class _HomePageBodyState extends State<HomePageBody> {
   List<Personaje> personajes = [];
   bool reachedLastPage = false;
   int count = 0;
+  int characterCount = 0;
+  bool isFirstLoad = true;
 
   String filtroStatus = '';
   String filtroSpecies = '';
   String filtroName = '';
 
+  late IsarService isarService;
+
   @override
   void initState() {
     super.initState();
+    isarService = IsarService();
     loadCharacters();
     scrollController.addListener(scrollListener);
   }
@@ -47,19 +53,28 @@ class _HomePageBodyState extends State<HomePageBody> {
 
   Future<void> loadCharacters() async {
     try {
-      final Result result = await Repository().fetchCharacters(
-              nextPageUrl, currentPage, filtroStatus, filtroName, filtroSpecies)
-          as Result;
-      final List<Personaje> newPersonajes = result.personajes ?? [];
+      final Result? result =
+          await Repository().fetchCharacters(nextPageUrl, currentPage);
+      final List<Personaje> newPersonajes = result!.personajes ?? [];
       count = result.info!.count!;
+      isarService.createPersonaje(newPersonajes);
+      if (isFirstLoad) {
+        characterCount = await isarService.getCharacterCount();
+        currentPage = (characterCount / 20).round();
+        if (currentPage == 0) {
+          currentPage = 1;
+        }
+        isFirstLoad = false;
+      }
       setState(() {
         personajes.addAll(newPersonajes);
         currentPage++;
-        nextPageUrl =
-            '/api/character/?page=$currentPage&status=$filtroStatus&name=$filtroName&species=$filtroSpecies';
-        reachedLastPage = personajes.length >= count;
+        nextPageUrl = '/api/character/?page=$currentPage';
+        reachedLastPage = characterCount >= count;
       });
+      // isFirstLoad = false;
     } catch (e) {
+      // const Text('conection error or endpoint mal');
       print('Error: $e');
     }
   }
@@ -69,13 +84,18 @@ class _HomePageBodyState extends State<HomePageBody> {
       filtroName = name;
       filtroSpecies = species;
       filtroStatus = status;
-      reachedLastPage = false;
       personajes.clear();
-      currentPage = 1;
-      nextPageUrl =
-          '/api/character/?page=$currentPage&status=$filtroStatus&name=$filtroName&species=$filtroSpecies';
+      // reachedLastPage = true;
     });
-    loadCharacters();
+    cargarFiltro();
+  }
+
+  Future<void> cargarFiltro() async {
+    List<Personaje> personajesFiltro = await isarService.getFilterCharactersDB(
+        filtroStatus, filtroName, filtroSpecies);
+    setState(() {
+      personajes.addAll(personajesFiltro);
+    });
   }
 
   @override
@@ -101,23 +121,23 @@ class _HomePageBodyState extends State<HomePageBody> {
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
-                value: 'rick',
+                value: 'Rick',
                 child: Text('Rick'),
               ),
               const PopupMenuItem<String>(
-                value: 'morty',
+                value: 'Morty',
                 child: Text('Morty'),
               ),
               const PopupMenuItem<String>(
-                value: 'summer',
+                value: 'Summer',
                 child: Text('Summer'),
               ),
               const PopupMenuItem<String>(
-                value: 'beth',
+                value: 'Beth',
                 child: Text('Beth'),
               ),
               const PopupMenuItem<String>(
-                value: 'jerry',
+                value: 'Jerry',
                 child: Text('Jerry'),
               ),
               const PopupMenuItem<String>(
@@ -143,15 +163,15 @@ class _HomePageBodyState extends State<HomePageBody> {
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
-                value: 'human',
+                value: 'Human',
                 child: Text('Humans'),
               ),
               const PopupMenuItem<String>(
-                value: 'alien',
+                value: 'Alien',
                 child: Text('Aliens'),
               ),
               const PopupMenuItem<String>(
-                value: 'cronenberg',
+                value: 'Cronenberg',
                 child: Text('Cronenbergs'),
               ),
               const PopupMenuItem<String>(
@@ -177,11 +197,11 @@ class _HomePageBodyState extends State<HomePageBody> {
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
-                value: 'alive',
+                value: 'Alive',
                 child: Text('Alive'),
               ),
               const PopupMenuItem<String>(
-                value: 'dead',
+                value: 'Dead',
                 child: Text('Dead'),
               ),
               const PopupMenuItem<String>(

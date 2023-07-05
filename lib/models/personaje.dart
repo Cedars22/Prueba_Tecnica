@@ -1,25 +1,27 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:isar/isar.dart';
 
 part 'personaje.g.dart';
 
 @JsonSerializable(explicitToJson: true)
+@collection
 class Personaje {
   @JsonKey(name: "id")
-  int? id;
+  Id? id;
   @JsonKey(name: "name")
-  String? name;
+  late String? name;
   @JsonKey(name: "species")
-  String? species;
+  late String? species;
   @JsonKey(name: "image")
-  String? image;
+  late String? image;
   @JsonKey(name: "status")
-  String? status;
+  late String? status;
   @JsonKey(name: "type")
-  String? type;
+  late String? type;
   @JsonKey(name: "gender")
-  String? gender;
+  late String? gender;
   @JsonKey(name: "created")
-  String? created;
+  late String? created;
   Personaje({
     this.id,
     this.name,
