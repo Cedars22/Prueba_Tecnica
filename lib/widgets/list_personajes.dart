@@ -11,14 +11,12 @@ class PersonajesList extends StatelessWidget {
     required this.personajes,
     required this.context,
     required this.reachedLastPage,
-    required this.count,
   });
 
   final ScrollController scrollController;
   final List<Personaje> personajes;
   final BuildContext context;
   final bool reachedLastPage;
-  final int count;
 
   @override
   Widget build(BuildContext context) {

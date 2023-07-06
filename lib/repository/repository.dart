@@ -17,12 +17,10 @@ class Repository {
       }
     } on DioException catch (e) {
       print('DioError: ${e.message}');
-      // return [];
       throw Exception("el endpoint está mal configurado");
     } on FormatException catch (e) {
       print('FormatException: ${e.message}');
       throw Exception("Error por formato");
-      // return [];
     }
   }
 }

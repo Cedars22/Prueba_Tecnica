@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prueba_tecnica/database/isar_service.dart';
+import 'package:prueba_tecnica/database/isar_database.dart';
+import 'package:prueba_tecnica/get_it/get_it.dart';
 import 'package:prueba_tecnica/models/personaje.dart';
 import 'package:prueba_tecnica/models/result.dart';
 import 'package:prueba_tecnica/repository/repository.dart';
@@ -14,6 +15,7 @@ class HomePageBody extends StatefulWidget {
 
 class _HomePageBodyState extends State<HomePageBody> {
   final ScrollController scrollController = ScrollController();
+  IsarDataBase get isarService => sl<IsarDataBase>();
   int currentPage = 1;
   String nextPageUrl = 'https://rickandmortyapi.com/api/character/?page=1';
   List<Personaje> personajes = [];
@@ -26,12 +28,13 @@ class _HomePageBodyState extends State<HomePageBody> {
   String filtroSpecies = '';
   String filtroName = '';
 
-  late IsarService isarService;
+  String status = '';
+  String name = '';
+  String species = '';
 
   @override
   void initState() {
     super.initState();
-    isarService = IsarService();
     loadCharacters();
     scrollController.addListener(scrollListener);
   }
@@ -57,6 +60,7 @@ class _HomePageBodyState extends State<HomePageBody> {
           await Repository().fetchCharacters(nextPageUrl, currentPage);
       final List<Personaje> newPersonajes = result!.personajes ?? [];
       count = result.info!.count!;
+      characterCount = await isarService.getCharacterCount();
       isarService.createPersonaje(newPersonajes);
       if (isFirstLoad) {
         characterCount = await isarService.getCharacterCount();
@@ -64,6 +68,7 @@ class _HomePageBodyState extends State<HomePageBody> {
         if (currentPage == 0) {
           currentPage = 1;
         }
+        cargaInicial();
         isFirstLoad = false;
       }
       setState(() {
@@ -72,10 +77,9 @@ class _HomePageBodyState extends State<HomePageBody> {
         nextPageUrl = '/api/character/?page=$currentPage';
         reachedLastPage = characterCount >= count;
       });
-      // isFirstLoad = false;
     } catch (e) {
-      // const Text('conection error or endpoint mal');
-      print('Error: $e');
+      applyFilterStatus(status, name, species);
+      reachedLastPage = true;
     }
   }
 
@@ -85,13 +89,29 @@ class _HomePageBodyState extends State<HomePageBody> {
       filtroSpecies = species;
       filtroStatus = status;
       personajes.clear();
-      // reachedLastPage = true;
+      if (count == 0) {
+        reachedLastPage == true;
+      } else if (characterCount == count) {
+        reachedLastPage = true;
+      } else if (name == '' && status == '' && species == '') {
+        reachedLastPage = false;
+      } else {
+        reachedLastPage = true;
+      }
     });
     cargarFiltro();
   }
 
   Future<void> cargarFiltro() async {
     List<Personaje> personajesFiltro = await isarService.getFilterCharactersDB(
+        filtroStatus, filtroName, filtroSpecies);
+    setState(() {
+      personajes.addAll(personajesFiltro);
+    });
+  }
+
+  Future<void> cargaInicial() async {
+    List<Personaje> personajesFiltro = await isarService.getInitialCharactersDB(
         filtroStatus, filtroName, filtroSpecies);
     setState(() {
       personajes.addAll(personajesFiltro);
@@ -245,7 +265,6 @@ class _HomePageBodyState extends State<HomePageBody> {
                   personajes: personajes,
                   context: context,
                   reachedLastPage: reachedLastPage,
-                  count: count,
                 ),
               ),
             ],

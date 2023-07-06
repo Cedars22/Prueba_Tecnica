@@ -12,8 +12,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (event is HomeEventGetPersonaje) {
       yield HomeStateLoading();
       try {
-        // Realiza las operaciones necesarias para obtener los personajes
-        // y luego emite el estado de éxito.
         yield HomeStateSucces();
       } catch (error) {
         yield const HomeStateError(error: 'No se logró cargar los personajes');
